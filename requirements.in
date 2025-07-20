@@ -1,7 +1,9 @@
 fastapi
 uvicorn
 pydantic-settings
+pydantic[email]
 SQLAlchemy
+asyncpg
 alembic
 bcrypt
-jose
+python-jose[cryptography]

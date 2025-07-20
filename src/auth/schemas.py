@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class UserCreate(BaseModel):
+    # Here it makes sense to add a restriction: prohibit the use of Cyrillic characters in the email and password.
     email: EmailStr
     password: str = Field(min_length=6)
     first_name: str | None = None

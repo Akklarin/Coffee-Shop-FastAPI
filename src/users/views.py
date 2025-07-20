@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from core.dependencies import SessionDep
+from src.core.dependencies import SessionDep
 
 
 user_router = APIRouter(tags=["User"])

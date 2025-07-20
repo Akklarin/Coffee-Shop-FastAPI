@@ -18,7 +18,7 @@ async def create_user(user_data: UserCreate, db: AsyncSession):
 
     new_user = User(
         email=user_data.email,
-        hashed_password=hash_password(user_data.password),
+        password_hash=hash_password(user_data.password),
         first_name=user_data.first_name,
         last_name=user_data.last_name,
         is_verified=False,
@@ -36,7 +36,7 @@ async def authenticate_user(user_data: UserLogin, db: AsyncSession) -> TokenPair
     )
     user = query.scalar_one_or_none()
 
-    if not user or not bcrypt.checkpw(user_data.password.encode(), user.hashed_password.encode()):
+    if not user or not bcrypt.checkpw(user_data.password.encode(), user.password_hash.encode()):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token_data = {"sub": str(user.id), "role": user.role}
@@ -47,6 +47,6 @@ async def authenticate_user(user_data: UserLogin, db: AsyncSession) -> TokenPair
 
 
 async def refresh_access_token(refresh_token: str) -> str:
-    token_data = decode_token(refresh_token)
+    token_data = decode_token(refresh_token, expected_type="refresh")
     new_access_token = create_access_token({"sub": token_data.sub, "role": token_data.role})
     return new_access_token

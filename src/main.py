@@ -14,6 +14,13 @@ app = FastAPI(
 app.include_router(main_router)
 
 
+@app.on_event("startup")
+async def on_startup():
+    from src.core.database import create_tables
+    await create_tables()
+
+# python -m src.main
+
 if __name__ == '__main__':
     uvicorn.run(
         'src.main:app',

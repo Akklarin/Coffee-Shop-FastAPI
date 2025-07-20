@@ -12,12 +12,18 @@ def hash_password(password: str) -> str:
 def create_access_token(data: dict) -> str:
     expires_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode = data.copy()
-    to_encode["exp"] = datetime.now(UTC) + expires_delta
+    to_encode.update({
+        "type": "access",
+        "exp": datetime.now(UTC) + expires_delta
+    })
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
 def create_refresh_token(data: dict) -> str:
     expires_delta = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     to_encode = data.copy()
-    to_encode["exp"] = datetime.now(UTC) + expires_delta
+    to_encode.update({
+        "type": "refresh",
+        "exp": datetime.now(UTC) + expires_delta
+    })
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)

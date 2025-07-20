@@ -8,13 +8,18 @@ from .schemas import TokenData
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
-def decode_token(token: str) -> TokenData:
+def decode_token(token: str, expected_type: str = None) -> TokenData:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         sub = payload.get("sub")
         role = payload.get("role")
+        token_type = payload.get("type")
+
         if sub is None or role is None:
             raise HTTPException(status_code=401, detail="Invalid token payload")
+        if expected_type and token_type != expected_type:
+            raise HTTPException(status_code=401, detail=f"Expected a {expected_type} token")
+
         return TokenData(sub=sub, role=role)
     except JWTError:
         raise HTTPException(status_code=401, detail="Could not validate credentials")

@@ -5,7 +5,8 @@ base declarative class for use throughout the application.
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from src.core.config import get_db_url
+
+from .config import get_db_url
 
 
 DATABASE_URL = get_db_url()

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from core.database import Base
 from datetime import datetime, UTC
+
+from .database import Base
 
 
 class User(Base):

@@ -24,6 +24,8 @@ h11==0.16.0
     # via uvicorn
 idna==3.10
     # via anyio
+jose==1.0.0
+    # via -r requirements.in
 mako==1.3.10
     # via alembic
 markupsafe==3.0.2

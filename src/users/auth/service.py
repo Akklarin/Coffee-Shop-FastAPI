@@ -4,10 +4,10 @@ from sqlalchemy import select
 from fastapi import HTTPException
 
 
-from src.core.models import User
+from src.users.models import User
 from src.core.security import decode_token
+from src.core.security import hash_password, create_access_token, create_refresh_token
 from .schemas import UserCreate, UserLogin, TokenPair
-from .utils import hash_password, create_access_token, create_refresh_token
 
 
 async def create_user(user_data: UserCreate, db: AsyncSession):

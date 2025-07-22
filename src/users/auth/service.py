@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from fastapi import HTTPException
 
-
 from src.users.models import User, ValidationCode
 from src.core.security import decode_token
 from src.core.security import hash_password, create_access_token, create_refresh_token

@@ -11,7 +11,7 @@ user_router = APIRouter(tags=["User_management"])
 
 
 @user_router.get("/me", response_model=UserOut)
-async def get_me(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 

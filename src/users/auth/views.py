@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from .schemas import UserCreate, TokenPair, UserLogin, RefreshTokenRequest
-from .service import create_user, authenticate_user, refresh_access_token
+from .schemas import UserCreate, TokenPair, UserLogin, RefreshTokenRequest, VerifyUser
+from .service import create_user, authenticate_user, refresh_access_token, verify_user
 from src.users.dependencies import SessionDep
 
 
@@ -29,3 +29,8 @@ async def refresh_token(request: RefreshTokenRequest):
         "refresh_token": request.refresh_token,
         "token_type": "bearer"
     }
+
+
+@auth_router.post("/verify")
+async def verify_user_route(data: VerifyUser, db: SessionDep):
+    return await verify_user(data, db)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime, UTC
 
 from src.core.database import Base
@@ -15,4 +15,12 @@ class User(Base):
     last_name = Column(String, nullable=True)
     role = Column(String,nullable=False, default="user")
     is_verified = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)
+
+
+class ValidationCode(Base):
+    __tablename__ = "validation"
+
+    email = Column(String, ForeignKey("users.email", ondelete="CASCADE"), primary_key=True)
+    code = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)

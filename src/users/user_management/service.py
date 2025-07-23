@@ -1,13 +1,14 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, status, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError, jwt
 
 from src.users.models import User
 from src.core.config import settings
 from src.users.dependencies import SessionDep
+from .schemas import UserUpdate
 
 
 bearer_scheme = HTTPBearer()
@@ -39,7 +40,6 @@ async def get_current_user(
     return user
 
 
-
 async def get_current_admin(user: Annotated[User, Depends(get_current_user)]) -> User:
     if user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
@@ -54,3 +54,22 @@ async def get_all_users(session: AsyncSession) -> list[User]:
 async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
     result = await session.execute(select(User).where(User.id == user_id))
     return result.scalar_one_or_none()
+
+
+async def delete_user_by_id(session: AsyncSession, user_id: int) -> None:
+    stmt = delete(User).where(User.id == user_id)
+    await session.execute(stmt)
+    await session.commit()
+
+
+async def update_user(session: AsyncSession, user_id: int, data: UserUpdate) -> User:
+    user = await session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(user, field, value)
+
+    await session.commit()
+    await session.refresh(user)
+    return user

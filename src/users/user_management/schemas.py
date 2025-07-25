@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class UserOut(BaseModel):
+    """Public representation of a user"""
     id: int
     email: EmailStr
     first_name: str | None = None
@@ -16,6 +17,7 @@ class UserOut(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    """Fields allowed for updating user data"""
     email: EmailStr | None = None
     first_name: str | None = None
     last_name: str | None = None

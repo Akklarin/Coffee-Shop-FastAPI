@@ -3,6 +3,8 @@ from typing import Literal
 
 
 class Settings(BaseSettings):
+    """Configuration settings loaded from environment variables."""
+
     PROJECT_TITLE: str
     PROJECT_DESCRIPTION: str
     PROJECT_DOCS_URL: str

@@ -9,17 +9,26 @@ from src.users.models import User
 user_router = APIRouter(tags=["User_management"])
 
 
-@user_router.get("/me", response_model=UserOut)
+@user_router.get("/me", response_model=UserOut,
+    summary="Get current user profile",
+    description="Returns the profile data of the currently authenticated user."
+)
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@user_router.get("/users/", response_model=list[UserOut])
+@user_router.get("/users/", response_model=list[UserOut],
+    summary="Get all users (admin only)",
+    description="Returns a list of all registered users. Only accessible to admin users."
+)
 async def all_users(session: SessionDep, admin: AdminOnly):
     return await get_all_users(session)
 
 
-@user_router.get("/users/{user_id}", response_model=UserOut)
+@user_router.get("/users/{user_id}", response_model=UserOut,
+    summary="Get user by ID (admin only)",
+    description="Returns the profile of a user by their ID. Only accessible to admin users."
+)
 async def user_by_id(user_id: int, session: SessionDep, admin: AdminOnly):
     user = await get_user_by_id(session, user_id)
     if not user:
@@ -27,7 +36,10 @@ async def user_by_id(user_id: int, session: SessionDep, admin: AdminOnly):
     return user
 
 
-@user_router.delete("/users/{user_id}", status_code=204)
+@user_router.delete("/users/{user_id}", status_code=204,
+    summary="Delete user by ID (admin only)",
+    description="Deletes a user specified by their ID. Only accessible to admin users."
+)
 async def delete_user(user_id: int, session: SessionDep, admin: AdminOnly):
     user = await get_user_by_id(session, user_id)
     if not user:
@@ -36,12 +48,14 @@ async def delete_user(user_id: int, session: SessionDep, admin: AdminOnly):
     await delete_user_by_id(session, user_id)
 
 
-@user_router.patch("/users/{user_id}", response_model=UserOut)
+@user_router.patch("/users/{user_id}", response_model=UserOut,
+    summary="Update user fields by ID (admin only)",
+    description="Updates specific fields of a user identified by ID. Only the provided fields will be changed. Accessible only to admin users."
+)
 async def patch_user(
     user_id: int,
     data: UserUpdate,
     session: SessionDep,
     admin: AdminOnly
 ):
-
     return await update_user(session, user_id, data)

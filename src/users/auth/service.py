@@ -4,13 +4,13 @@ from sqlalchemy import select
 from fastapi import HTTPException
 
 from src.users.models import User, ValidationCode
-from src.core.security import decode_token
-from src.core.security import hash_password, create_access_token, create_refresh_token
+from src.core.security import hash_password, create_access_token, create_refresh_token, decode_token
 from .schemas import UserCreate, UserLogin, TokenPair, VerifyUser
 from .utils import generate_verification_code
 
 
 async def create_user(user_data: UserCreate, db: AsyncSession):
+    """Register a new user and create a verification code."""
     result = await db.execute(select(User).where(User.email == user_data.email))
     existing_user = result.scalar_one_or_none()
     if existing_user:
@@ -38,6 +38,7 @@ async def create_user(user_data: UserCreate, db: AsyncSession):
 
 
 async def authenticate_user(user_data: UserLogin, db: AsyncSession) -> TokenPair:
+    """Authenticate user credentials and return a token pair."""
     query = await db.execute(
         select(User).where(User.email == user_data.email)
     )
@@ -54,12 +55,14 @@ async def authenticate_user(user_data: UserLogin, db: AsyncSession) -> TokenPair
 
 
 async def refresh_access_token(refresh_token: str) -> str:
+    """Generate a new access token using a valid refresh token."""
     token_data = decode_token(refresh_token, expected_type="refresh")
     new_access_token = create_access_token({"sub": token_data.sub, "role": token_data.role})
     return new_access_token
 
 
 async def verify_user(data: VerifyUser, db: AsyncSession):
+    """Mark user as verified if the provided code matches."""
     result = await db.execute(select(User).where(User.email == data.email))
     user = result.scalar_one_or_none()
     if not user:

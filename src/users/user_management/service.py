@@ -18,6 +18,7 @@ async def get_current_user(
     session: SessionDep,
     credentials: HTTPAuthorizationCredentials = Security(bearer_scheme),
 ) -> User:
+    """Returns the user extracted from a valid JWT access token"""
     token = credentials.credentials
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -41,28 +42,33 @@ async def get_current_user(
 
 
 async def get_current_admin(user: Annotated[User, Depends(get_current_user)]) -> User:
+    """Ensures the current user has admin privileges"""
     if user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
     return user
 
 
 async def get_all_users(session: AsyncSession) -> list[User]:
+    """Fetches all users from the database"""
     result = await session.execute(select(User))
     return result.scalars().all()
 
 
 async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
+    """Retrieves a user by their ID"""
     result = await session.execute(select(User).where(User.id == user_id))
     return result.scalar_one_or_none()
 
 
 async def delete_user_by_id(session: AsyncSession, user_id: int) -> None:
+    """Deletes a user by their ID"""
     stmt = delete(User).where(User.id == user_id)
     await session.execute(stmt)
     await session.commit()
 
 
 async def update_user(session: AsyncSession, user_id: int, data: UserUpdate) -> User:
+    """Updates user fields with provided data"""
     user = await session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

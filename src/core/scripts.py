@@ -1,9 +1,11 @@
+import asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.users.models import User
+from src.core.database import AsyncSessionLocal
 from .config import settings
 from .security import hash_password
-from src.users.models import User
 
 
 async def seed_admin(session: AsyncSession):
@@ -19,3 +21,11 @@ async def seed_admin(session: AsyncSession):
         )
         session.add(admin)
         await session.commit()
+
+
+if __name__ == "__main__":
+    async def main():
+        async with AsyncSessionLocal() as session:
+            await seed_admin(session)
+
+    asyncio.run(main())

@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import EmailStr
 from typing import Literal
 
 
@@ -19,6 +20,8 @@ class Settings(BaseSettings):
     ALGORITHM: Literal["HS256", "RS256"] = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    ADMIN_EMAIL: EmailStr
+    ADMIN_PASSWORD: str
 
     model_config = SettingsConfigDict(
         env_file='.env',

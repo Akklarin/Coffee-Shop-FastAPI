@@ -21,8 +21,3 @@ async def get_session() -> AsyncSession:
     """Provides a scoped asynchronous database session."""
     async with AsyncSessionLocal() as session:
         yield session
-
-
-async def create_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)

@@ -4,6 +4,7 @@ pydantic-settings
 pydantic[email]
 SQLAlchemy
 asyncpg
+psycopg2
 alembic
 bcrypt
 python-jose[cryptography]

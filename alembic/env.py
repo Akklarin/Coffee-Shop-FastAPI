@@ -9,7 +9,7 @@ from alembic import context
 
 from src.core.database import Base
 from src.users.models import User
-from src.core.config import get_db_url
+from src.core.config import get_async_db
 
 
 config = context.config
@@ -19,7 +19,7 @@ if config.config_file_name is not None:
 
 
 target_metadata = Base.metadata
-config.set_main_option('sqlalchemy.url', get_db_url())
+config.set_main_option('sqlalchemy.url', get_async_db())
 
 
 def run_migrations_offline() -> None:

@@ -1,18 +1,16 @@
-"""
-This module configures the asynchronous SQLAlchemy engine, sessionmaker, and
-base declarative class for use throughout the application.
-"""
-
+from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-from .config import get_db_url
+from .config import get_async_db, get_db
 
+# Async engine and session (for async API and async DB operations)
+async_engine = create_async_engine(get_async_db(), future=True)
+AsyncSessionLocal = async_sessionmaker(async_engine, expire_on_commit=False)
 
-DATABASE_URL = get_db_url()
-
-engine = create_async_engine(DATABASE_URL, future=True)
-AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
+# Synchronous engine and session (for Celery tasks and sync DB operations)
+engine = create_engine(get_db(), future=True)
+SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
 Base = declarative_base()
 

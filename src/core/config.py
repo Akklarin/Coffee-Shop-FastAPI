@@ -32,6 +32,22 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-def get_db_url():
+def get_async_db():
+    """
+    Returns the database URL for asynchronous connections.
+
+    This URL is used for the async API, async database operations,
+    and most of the application logic that requires async support.
+    """
     return (f'postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@'
+            f'{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}')
+
+
+def get_db():
+    """
+    Returns the database URL for synchronous connections.
+
+    This URL is primarily used by Celery workers.
+    """
+    return (f'postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@'
             f'{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}')

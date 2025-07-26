@@ -7,11 +7,17 @@ celery_app = Celery(
     include=["src.tasks.celery_tasks"],
 )
 
+celery_app.conf.update(
+    timezone="UTC",
+    enable_utc=True,
+    task_serializer="json",
+    accept_content=["json"],
+    result_serializer="json",
+)
+
 celery_app.conf.beat_schedule = {
-    "delete-unverified-everyday": {
+    "delete-unverified-every-60-seconds": {
         "task": "delete_unverified_users",
         "schedule": 60 * 60 * 24,
     },
 }
-
-celery_app.conf.timezone = "UTC"

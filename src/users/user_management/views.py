@@ -50,7 +50,7 @@ async def delete_user(user_id: int, session: SessionDep, admin: AdminOnly):
 
 @user_router.patch("/users/{user_id}", response_model=UserOut,
     summary="Update user fields by ID (admin only)",
-    description="Updates specific fields of a user identified by ID. Only the provided fields will be changed. Accessible only to admin users."
+    description="Updates specific fields of a user identified by ID. Only the provided fields will be changed. Only accessible to admin users."
 )
 async def patch_user(
     user_id: int,

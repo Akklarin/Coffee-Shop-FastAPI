@@ -9,6 +9,7 @@ from .security import hash_password
 
 
 async def seed_admin(session: AsyncSession):
+    """Create the first admin user in the database if it does not already exist."""
     result = await session.execute(select(User).where(User.email == settings.ADMIN_EMAIL))
     admin = result.scalar_one_or_none()
 

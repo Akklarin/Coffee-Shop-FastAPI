@@ -16,7 +16,7 @@ celery_app.conf.update(
 )
 
 celery_app.conf.beat_schedule = {
-    "delete-unverified-every-60-seconds": {
+    "delete-unverified_everyday": {
         "task": "delete_unverified_users",
         "schedule": 60 * 60 * 24,
     },

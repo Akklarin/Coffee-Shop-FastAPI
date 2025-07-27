@@ -28,7 +28,7 @@ This module implements user authentication, verification, and role-based access 
     cd <project-dir>
     ```
 
-2. Create and activate a virtual environment:
+2. Create and activate a virtual environment.
 
 3. Install dependencies:
 
@@ -50,13 +50,39 @@ This module implements user authentication, verification, and role-based access 
 ## Project Structure
 
 ```bash
-src/
-├── core/  # Config, DB setup (async + sync), security, seeding
-├── users/
-│ ├── auth/  # Signup, login, verification
-│ ├── user_management/  # Logic for managing users
-│ └── models.py  # SQLAlchemy models
-├── tasks/  # Celery background tasks
-├── api.py  # Router registration
-└── main.py  # App entry point
+├── alembic/ # Database migrations
+├── src/
+│   ├── core/
+│   │   ├── config.py  # Environment configuration
+│   │   ├── database.py  # Async and sync database engines/sessions
+│   │   ├── schemas.py  # Security-related Pydantic models
+│   │   ├── scripts.py  # Startup scripts (e.g., admin user creation)
+│   │   └── security.py  # Password hashing and JWT handling
+│   │
+│   ├── tasks/
+│   │   └── celery_tasks.py  # Background tasks (e.g., auto-delete unverified users)
+│   │
+│   ├── users/
+│   │   ├── auth/
+│   │   │   ├── schemas.py  # Pydantic models for auth endpoints
+│   │   │   ├── service.py  # Business logic for registration, login, verification
+│   │   │   ├── utils.py  # Helper functions (e.g., code generation)
+│   │   │   └── views.py  # Routes for auth
+│   │   ├── user_management/
+│   │   │   ├── dependencies.py  # Dependency for role-based access
+│   │   │   ├── schemas.py  # Pydantic models for user data
+│   │   │   ├── service.py  # User management logic (e.g., update, delete)
+│   │   │   └── views.py  # Routes for user management
+│   │   ├── dependencies.py  # Shared dependencies (e.g., get_session)
+│   │   └── models.py  # SQLAlchemy models
+│   │
+│   ├── api.py  # FastAPI router registration
+│   └── main.py  # Application entry point
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env  # Environment variables file
+├── worker.py  # Celery worker entry point
+└── alembic.ini  # Alembic configuration
 ```

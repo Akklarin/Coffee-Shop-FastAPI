@@ -14,7 +14,7 @@ services:
       timeout: 5s
       retries: 10
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      - "${POSTGRES_PORT}:5432"
 
   redis:
     image: redis:7

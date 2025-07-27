@@ -41,7 +41,7 @@ This module implements user authentication, verification, and role-based access 
 5. Start the application:
 
     ```bash
-    docker-compose up --build
+    docker compose up --build
     ```
 
     By default, the API will be available at `http://localhost:8000/docs`.  
